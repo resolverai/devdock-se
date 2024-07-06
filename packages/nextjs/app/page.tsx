@@ -2,16 +2,26 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useUser } from "@auth0/nextjs-auth0/client";
 import type { NextPage } from "next";
-import { useAccount } from "wagmi";
+// import { useAccount } from "wagmi";
 import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { Address } from "~~/components/scaffold-eth";
+// import { Address } from "~~/components/scaffold-eth";
+import Profile from "~~/components/Profile";
 
 const Home: NextPage = () => {
-  const { address: connectedAddress } = useAccount();
+  const { user, error, isLoading } = useUser();
+  // const { address: connectedAddress } = useAccount();
 
   return (
     <>
+      {!user ? (
+        <Link href="/api/auth/login" className="link absolute top-4 right-10">
+          Login
+        </Link>
+      ) : (
+        <Profile></Profile>
+      )}
       <div className="flex items-center flex-col flex-grow pt-10">
         <div className="px-5">
           <h1 className="text-center">
@@ -25,7 +35,7 @@ const Home: NextPage = () => {
           </h1>
           <div className="flex justify-center items-center space-x-2">
             <p className="my-2 font-medium">Connected Address:</p>
-            <Address address={connectedAddress} />
+            {/* <Address address={connectedAddress} /> */}
           </div>
           <p className="text-center text-lg">
             Get started by editing{" "}

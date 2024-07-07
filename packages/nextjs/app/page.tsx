@@ -114,7 +114,7 @@ const Home: NextPage = () => {
             </div>
           </h1>
           <div className="flex justify-center items-center space-x-2">
-            <p className="my-2 font-medium">Connected Address:</p>
+            <p className="my-2 font-medium">Connected Address: 0x741267166ff2a1721f140B819B6f844F8C7D8d74 </p>
             {/* <Address address={connectedAddress} /> */}
           </div>
         </div>
@@ -159,24 +159,6 @@ const Home: NextPage = () => {
                 style={{ width: "40px", height: "40px", margin: "0 auto" }}
               />
               <p className="text-xl text-black text-center">{chainsContributed}</p>
-            </div>
-            <div className="bg-blue-200 p-4 rounded-md mx-4">
-              <h2 className="text-lg font-semibold text-black">Total claimable</h2>
-              <img
-                src="/token_logo.png"
-                alt="Chains contributed Image"
-                style={{ width: "40px", height: "40px", margin: "0 auto" }}
-              />
-              <p className="text-xl text-black text-center">{availableToClaim | 0}</p>
-            </div>
-            <div className="bg-blue-200 p-4 rounded-md mx-4">
-              <h2 className="text-lg font-semibold text-black">Total pool balance</h2>
-              <img
-                src="/token_logo.png"
-                alt="Chains contributed Image"
-                style={{ width: "40px", height: "40px", margin: "0 auto" }}
-              />
-              <p className="text-xl text-black text-center">{totalPoolBalance | 0}</p>
             </div>
           </div>
         </div>

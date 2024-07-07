@@ -114,7 +114,11 @@ const Home: NextPage = () => {
             </div>
           </h1>
           <div className="flex justify-center items-center space-x-2">
-            <p className="my-2 font-medium">Connected Address: 0x741267166ff2a1721f140B819B6f844F8C7D8d74 </p>
+            {user ? (
+              <p className="my-2 font-medium">Connected Address: 0x741267166ff2a1721f140B819B6f844F8C7D8d74 </p>
+            ) : (
+              <p className="my-2 font-medium">Connected Address: </p>
+            )}
             {/* <Address address={connectedAddress} /> */}
           </div>
         </div>

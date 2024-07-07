@@ -1,17 +1,104 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { rewardABI, rewardAddres } from "./abi/rewardContract";
+import { tokenABI, tokenAddres } from "./abi/tokenABI";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import type { NextPage } from "next";
+import { formatEther, formatUnits } from "viem";
+import { createPublicClient, createWalletClient, http } from "viem";
+import { privateKeyToAccount } from "viem/accounts";
+import { sepolia } from "viem/chains";
 // import { useAccount } from "wagmi";
 import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 // import { Address } from "~~/components/scaffold-eth";
 import Profile from "~~/components/Profile";
+import { useScaffoldReadContract } from "~~/hooks/scaffold-eth/useScaffoldReadContract";
+import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth/useScaffoldWriteContract";
 
 const Home: NextPage = () => {
   const { user, error, isLoading } = useUser();
   // const { address: connectedAddress } = useAccount();
+
+  const [contributionsCount, setContributionsCount] = useState(85);
+  const [tokensEarnedCount, setTokensEarnedCount] = useState(17300);
+  const [chainsContributed, setchainsContributed] = useState(6);
+  const [availableToClaim, setavailableToClaim] = useState(0);
+  const [totalPoolBalance, settotalPoolBalance] = useState(0);
+  const [tokenCount, setTokenCount] = useState(0);
+  const [totalTokens, settotalTokens] = useState(500);
+
+  const account = privateKeyToAccount("0x63fc625e1c16ac39f1c9601f688f208bc991cc16f2d77b8a22267b8f742a452d");
+
+  const publicClient = createPublicClient({
+    chain: sepolia,
+    transport: http(),
+  });
+
+  const claimReward = async (claimAmount: number) => {
+    const walletClient = createWalletClient({
+      account: account,
+      chain: sepolia,
+      transport: http(),
+    });
+
+    const { request } = await publicClient.simulateContract({
+      address: rewardAddres,
+      abi: rewardABI,
+      functionName: "withdraw",
+      account: account,
+      args: [claimAmount * 10 ** 18],
+    });
+    await walletClient.writeContract(request);
+  };
+
+  const getClaimableBalance = async (userAddress: string) => {
+    const data = await publicClient.readContract({
+      address: rewardAddres,
+      abi: rewardABI,
+      functionName: "getBalance",
+      args: [userAddress],
+    });
+    return Number(data) * 10 ** -18;
+  };
+
+  const getTotalAvailable = async () => {
+    const data = await publicClient.readContract({
+      address: rewardAddres,
+      abi: rewardABI,
+      functionName: "getPoolBalance",
+    });
+    return Number(data) * 10 ** -18;
+  };
+
+  const handleClaimTokens = async (tokenCount: number) => {
+    await claimReward(tokenCount);
+    // Implement your logic to claim tokens here
+    // For example, you can call an API endpoint to transfer tokens to the user's wallet
+    // After the tokens are claimed, you can update the state variables accordingly
+    setTokensEarnedCount(currentCount => currentCount + tokenCount);
+    setavailableToClaim(availableToClaim - tokenCount);
+  };
+
+  useEffect(() => {
+    const set = async () => {
+      const totalClaimable = await getClaimableBalance("0x741267166ff2a1721f140B819B6f844F8C7D8d74");
+      const totalAvailablePool = await getTotalAvailable();
+
+      if (totalClaimable) setavailableToClaim(Number(totalClaimable));
+      if (totalAvailablePool) settotalPoolBalance(Number(totalClaimable));
+    };
+    set();
+
+    // Implement your logic to fetch the developer profile data here
+    // For example, you can call an API endpoint to fetch the developer profile data
+    // After the data is fetched, you can update the state variables accordingly
+    // setContributionsCount(data.contributionsCount);
+    // setTokensEarnedCount(data.tokensEarnedCount);
+    // setLanguagesContributed(data.languagesContributed);
+  }, []); //add the address into dependency array
 
   return (
     <>
@@ -28,54 +115,57 @@ const Home: NextPage = () => {
             <span className="block text-2xl mb-2">Welcome to</span>
             <div className="block text-4xl font-bold">
               <div className="inline-block relative w-10 h-10 align-bottom mr-2">
-                <Image alt="Base logo" className="cursor-pointer" fill src="/Base_Symbol_Blue.svg" />
+                <Image alt="Base logo" className="cursor-pointer" fill src="/logo.svg" />
               </div>
-              Scaffold-Base
+              Devdock
             </div>
           </h1>
           <div className="flex justify-center items-center space-x-2">
             <p className="my-2 font-medium">Connected Address:</p>
             {/* <Address address={connectedAddress} /> */}
           </div>
-          <p className="text-center text-lg">
-            Get started by editing{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/nextjs/app/page.tsx
-            </code>
-          </p>
-          <p className="text-center text-lg">
-            Edit your smart contract{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              YourContract.sol
-            </code>{" "}
-            in{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/hardhat/contracts
-            </code>
-          </p>
         </div>
-
-        <div className="flex-grow bg-base-300 w-full mt-16 px-8 py-12">
-          <div className="flex justify-center items-center gap-12 flex-col sm:flex-row">
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <BugAntIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Tinker with your smart contract using the{" "}
-                <Link href="/debug" passHref className="link">
-                  Debug Contracts
-                </Link>{" "}
-                tab.
-              </p>
+        <div className="flex flex-col items-center mt-10">
+          <input
+            type="number"
+            value={tokenCount}
+            onChange={e => setTokenCount(parseInt(e.target.value, 10))}
+            max={totalTokens}
+            className="border border-gray-300 rounded px-3 py-2 mb-4 text-black text-right"
+          />
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4 text-black "
+            onClick={() => handleClaimTokens(tokenCount)}
+          >
+            Claim Tokens
+          </button>
+          <div className="flex justify-around w-full mt-8">
+            <div className="bg-blue-200 p-4 rounded-md mx-4">
+              <h2 className="text-lg font-semibold text-black text-center">Contracts Deployed</h2>
+              <img
+                src="/smart-contracts.png"
+                alt="Contracts Deployed Image"
+                style={{ width: "45px", height: "45px", margin: "0 auto" }}
+              />
+              <p className="text-xl text-black text-center">{contributionsCount}</p>
             </div>
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <MagnifyingGlassIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Explore your local transactions with the{" "}
-                <Link href="/blockexplorer" passHref className="link">
-                  Block Explorer
-                </Link>{" "}
-                tab.
-              </p>
+            <div className="bg-blue-200 p-4 rounded-md mx-4">
+              <h2 className="text-lg font-semibold text-black">Tokens Earned</h2>
+              <img
+                src="/token_logo.png"
+                alt="Token Image"
+                style={{ width: "40px", height: "40px", margin: "0 auto" }}
+              />
+              <p className="text-xl text-black text-center">{tokensEarnedCount}</p>
+            </div>
+            <div className="bg-blue-200 p-4 rounded-md mx-4">
+              <h2 className="text-lg font-semibold text-black">Chains Contributed</h2>
+              <img
+                src="/Chain-logo.png"
+                alt="Chains contributed Image"
+                style={{ width: "40px", height: "40px", margin: "0 auto" }}
+              />
+              <p className="text-xl text-black text-center">{chainsContributed}</p>
             </div>
           </div>
         </div>

@@ -29,6 +29,7 @@ const Home: NextPage = () => {
   const [totalPoolBalance, settotalPoolBalance] = useState(0);
   const [tokenCount, setTokenCount] = useState(0);
   const [totalTokens, settotalTokens] = useState(500);
+  const [showPopup, setShowPopup] = useState(false);
 
   const account = privateKeyToAccount("0x63fc625e1c16ac39f1c9601f688f208bc991cc16f2d77b8a22267b8f742a452d");
 
@@ -52,6 +53,8 @@ const Home: NextPage = () => {
       args: [claimAmount * 10 ** 18],
     });
     await walletClient.writeContract(request);
+    setShowPopup(true);
+    setTimeout(() => setShowPopup(false), 3000);
   };
 
   const getClaimableBalance = async (userAddress: string) => {
@@ -75,9 +78,6 @@ const Home: NextPage = () => {
 
   const handleClaimTokens = async (tokenCount: number) => {
     await claimReward(tokenCount);
-    // Implement your logic to claim tokens here
-    // For example, you can call an API endpoint to transfer tokens to the user's wallet
-    // After the tokens are claimed, you can update the state variables accordingly
     setTokensEarnedCount(currentCount => currentCount + tokenCount);
     setavailableToClaim(availableToClaim - tokenCount);
   };
@@ -88,17 +88,10 @@ const Home: NextPage = () => {
       const totalAvailablePool = await getTotalAvailable();
 
       if (totalClaimable) setavailableToClaim(Number(totalClaimable));
-      if (totalAvailablePool) settotalPoolBalance(Number(totalClaimable));
+      if (totalAvailablePool) settotalPoolBalance(Number(totalAvailablePool));
     };
     set();
-
-    // Implement your logic to fetch the developer profile data here
-    // For example, you can call an API endpoint to fetch the developer profile data
-    // After the data is fetched, you can update the state variables accordingly
-    // setContributionsCount(data.contributionsCount);
-    // setTokensEarnedCount(data.tokensEarnedCount);
-    // setLanguagesContributed(data.languagesContributed);
-  }, []); //add the address into dependency array
+  }, []);
 
   return (
     <>
@@ -107,7 +100,7 @@ const Home: NextPage = () => {
           Login
         </Link>
       ) : (
-        <Profile></Profile>
+        <Profile />
       )}
       <div className="flex items-center flex-col flex-grow pt-10">
         <div className="px-5">
@@ -167,9 +160,32 @@ const Home: NextPage = () => {
               />
               <p className="text-xl text-black text-center">{chainsContributed}</p>
             </div>
+            <div className="bg-blue-200 p-4 rounded-md mx-4">
+              <h2 className="text-lg font-semibold text-black">Total claimable</h2>
+              <img
+                src="/token_logo.png"
+                alt="Chains contributed Image"
+                style={{ width: "40px", height: "40px", margin: "0 auto" }}
+              />
+              <p className="text-xl text-black text-center">{availableToClaim | 0}</p>
+            </div>
+            <div className="bg-blue-200 p-4 rounded-md mx-4">
+              <h2 className="text-lg font-semibold text-black">Total pool balance</h2>
+              <img
+                src="/token_logo.png"
+                alt="Chains contributed Image"
+                style={{ width: "40px", height: "40px", margin: "0 auto" }}
+              />
+              <p className="text-xl text-black text-center">{totalPoolBalance | 0}</p>
+            </div>
           </div>
         </div>
       </div>
+      {showPopup && (
+        <div className="fixed bottom-0 right-0 mb-4 mr-4 bg-green-500 text-white p-4 rounded shadow-lg">
+          Claim successful!
+        </div>
+      )}
     </>
   );
 };

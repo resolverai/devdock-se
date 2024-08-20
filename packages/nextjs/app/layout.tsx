@@ -5,7 +5,12 @@ import "@rainbow-me/rainbowkit/styles.css";
 // import { ThemeProvider } from "~~/components/ThemeProvider";
 import "~~/styles/globals.css";
 import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
-
+import { config } from "./config";
+import { cookieToInitialState } from "@account-kit/core";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { headers } from "next/headers";
+import { Providers } from "./provider"
 interface RootLayoutProps {
   children: ReactNode;
 }
@@ -16,11 +21,17 @@ export const metadata = getMetadata({
 });
 
 export default function RootLayout({ children }: RootLayoutProps) {
+  const initialState = cookieToInitialState(
+    config,
+    headers().get("cookie") ?? undefined
+  );
   return (
     <html lang="en">
+      <Providers initialState={initialState}>
       <UserProvider>
         <body>{children}</body>
       </UserProvider>
+      </Providers>
     </html>
   );
 }

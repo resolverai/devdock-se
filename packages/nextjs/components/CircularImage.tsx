@@ -1,6 +1,6 @@
 // components/CircularImage.tsx
 import React, { useState } from "react";
-import Link from "next/link";
+import { useLogout } from "@account-kit/react";
 
 interface CircularImageProps {
   src: string | undefined;
@@ -12,13 +12,23 @@ interface CircularImageProps {
 const CircularImage: React.FC<CircularImageProps> = ({ src, alt, size, email }) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
+  const { logout } = useLogout({
+    onError: (error) => {
+      console.error("Logout Error:", error);
+    },
+    onSuccess: () => {
+      console.log("Logout Success");
+      window.location.href = "/api/auth/logout";
+    }
+  });
+
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
   };
 
   const handleLogout = () => {
-    // Add your logout logic here
-    console.log("Logout clicked");
+    logout();
+    setDropdownVisible(false);
   };
 
   return (
@@ -29,18 +39,13 @@ const CircularImage: React.FC<CircularImageProps> = ({ src, alt, size, email }) 
         onClick={toggleDropdown}
       >
         <img src={src} alt={alt} className="object-cover w-full h-full" />
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100">
-          {/* <span className="text-white text-sm">{alt}</span> */}
-        </div>
       </div>
       <p className="mt-2 relative text-sm items-center text-gray-700">{email}</p>
       {dropdownVisible && (
         <div className="absolute mt-2 bg-white border rounded shadow-lg">
           <ul>
-            <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">
-              <Link href="/api/auth/logout" className="link">
-                Logout
-              </Link>
+            <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer" onClick={handleLogout}>
+              Logout
             </li>
           </ul>
         </div>

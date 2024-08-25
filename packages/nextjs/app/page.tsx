@@ -50,7 +50,8 @@ const Home: NextPage = () => {
       {!user ? (
         <>
           <Link href="/api/auth/login" className="link absolute top-4 right-10">
-            Login
+            Login0
+            0.0
           </Link>
           {showPopup && (
             <div className="popup">

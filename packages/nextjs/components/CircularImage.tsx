@@ -1,6 +1,7 @@
 // components/CircularImage.tsx
 import React, { useState } from "react";
 import { useLogout } from "@account-kit/react";
+import Link from "next/link";
 
 interface CircularImageProps {
   src: string | undefined;
@@ -18,16 +19,16 @@ const CircularImage: React.FC<CircularImageProps> = ({ src, alt, size, email }) 
     },
     onSuccess: () => {
       console.log("Logout Success");
-      window.location.href = "/api/auth/logout";
     }
   });
-
+  
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
   };
-
+  
   const handleLogout = () => {
     logout();
+    // window.location.href = "/api/auth/logout";
     setDropdownVisible(false);
   };
 
@@ -44,9 +45,9 @@ const CircularImage: React.FC<CircularImageProps> = ({ src, alt, size, email }) 
       {dropdownVisible && (
         <div className="absolute mt-2 bg-white border rounded shadow-lg">
           <ul>
-            <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer" onClick={handleLogout}>
+            <Link  href="/api/auth/logout" className="px-4 py-2 hover:bg-gray-200 cursor-pointer"  onClick={handleLogout}>
               Logout
-            </li>
+            </Link>
           </ul>
         </div>
       )}

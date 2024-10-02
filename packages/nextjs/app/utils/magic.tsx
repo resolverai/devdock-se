@@ -5,26 +5,37 @@ import { SDKBase, InstanceWithExtensions } from '@magic-sdk/provider';
 
 type MagicSDK = InstanceWithExtensions<
   SDKBase,
-  { oauth: OAuthExtension; flow: FlowExtension }
+  { oauth2: OAuthExtension; flow: FlowExtension }
 >;
 
 let magic: MagicSDK | null = null;
 
 const createMagic = (key: string): MagicSDK => {
   return new MagicBase(key, {
-    extensions: {
-      oauth: new OAuthExtension(),
-      flow: new FlowExtension({
+    extensions: [
+      new OAuthExtension(),
+      new FlowExtension({
         rpcUrl: 'https://rest-testnet.onflow.org',
         network: 'testnet'
       }),
-    },
-  }) as MagicSDK;
+    ]
+  });
 };
 
 export const getMagic = (): MagicSDK | null => {
   if (typeof window !== 'undefined' && !magic) {
-    magic = createMagic('pk_live_C3F8C5D5B5287599'); // change key
+    magic = createMagic('pk_live_EEBF7A044DEA0768'); // change key
   }
   return magic;
 };
+
+//pk_live_C3F8C5D5B5287599
+
+
+
+
+
+
+
+
+

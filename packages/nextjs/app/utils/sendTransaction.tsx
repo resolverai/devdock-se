@@ -22,6 +22,7 @@ export async function sendTransaction(): Promise<TransactionStatus | undefined> 
     console.log('SENDING TRANSACTION...');
 
     try {
+        /*
         const response = await fcl.send([
             fcl.transaction`
                 transaction {
@@ -52,7 +53,7 @@ export async function sendTransaction(): Promise<TransactionStatus | undefined> 
             console.log(`Oh No: ${data.errorMessage}`);
             return data;
         }
-    } catch (error) {
+    */} catch (error) {
         console.error('FAILED TRANSACTION', error);
         return undefined;
     }

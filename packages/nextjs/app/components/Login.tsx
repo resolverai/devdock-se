@@ -10,8 +10,10 @@ type Provider = 'github' | 'google' | 'facebook' | 'apple'; // Add other provide
 
 const Login: FC = () => {
   const handleSocialLogin = async (provider: Provider) => {
+    console.log("Inside Hanlde social login")
     try {
-      await magic?.oauth.loginWithRedirect({
+      //@ts-ignore
+      await magic?.oauth2.loginWithRedirect({
         provider,
         redirectURI: new URL("/dashboard", window.location.origin).href,
       });

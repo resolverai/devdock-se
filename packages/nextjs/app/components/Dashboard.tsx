@@ -19,11 +19,12 @@ const Dashboard: React.FC = () => {
   const [oauthReturnData, setOauthReturnData] = useState<OAuthReturnData | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
+  
   const finishSocialLogin = async () => {
     try {
         
-        //@ts-ignore
-      const result = await magic.oauth.getRedirectResult();
+        // @ts-ignore
+      const result = await magic.oauth2.getRedirectResult();
       const userInfo = await magic?.user.getInfo();
       setOauthReturnData(result);
       setUser(userInfo||null);

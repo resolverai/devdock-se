@@ -2,18 +2,20 @@
 
 import { useEffect, useState } from "react";
 // import { getMagic } from './../utils/magic';
-
+import {ethers} from "ethers"
 import { useRouter,useSearchParams } from "next/navigation";
 import { sendTransaction } from "../utils/sendTransaction";
 import {MagicUserMetadata} from "magic-sdk"
-import { getMagic } from "../utils/magic";
+import { getMagic, getMagic_eth } from "../utils/magic";
 
 // const magic = getMagic()
 // Define types for user and oauth return data
 const magic = getMagic()
+// const magic = getMagic_eth()
 type OAuthReturnData = {
   [key: string]: any; // Adjust this based on the actual structure of oauth return data
 };
+
 
 const Dashboard: React.FC = () => {
   const [user, setUser] = useState<MagicUserMetadata | null>(null);
@@ -21,6 +23,12 @@ const Dashboard: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const print_signer=async()=>{
+    const provider = new ethers.BrowserProvider(magic?.rpcProvider);
+    console.log({provider})
+    const signer = await provider.getSigner()
+    console.log({signer})
+  }
   const finishSocialLogin = async () => {
     try {
       console.log("inside finishSocialLogin");
@@ -30,9 +38,9 @@ const Dashboard: React.FC = () => {
 
       const userInfo = await magic?.user.getInfo();
       console.log("userInfo:::", userInfo);
-
       setOauthReturnData(result || null);
       setUser(userInfo || null);
+      await print_signer()
       return result;
     } catch (err) {
       console.error(err);

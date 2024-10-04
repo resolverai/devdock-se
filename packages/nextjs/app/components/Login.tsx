@@ -1,9 +1,10 @@
 'use client'
 import * as fcl from '@onflow/fcl';
 import { FC, MouseEvent } from 'react';
-import { getMagic } from './../utils/magic';
+import { getMagic, getMagic_eth } from './../utils/magic';
 
 const magic = getMagic()
+// const magic = getMagic_eth()
 
 // Define the type for the provider
 type Provider = 'github' | 'google' | 'facebook' | 'apple'; // Add other providers as needed

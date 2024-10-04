@@ -1,7 +1,8 @@
 import * as fcl from '@onflow/fcl';
-import { getMagic } from './magic';
+import { getMagic,getMagic_eth } from './magic';
 
 const magic = getMagic()
+// const magic = getMagic_eth()
 console.log("inside transaction")
 console.log({magic})
 import { TransactionStatus } from '@onflow/typedefs';

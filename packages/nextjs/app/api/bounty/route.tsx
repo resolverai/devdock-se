@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const BASE_URL = "http://172.81.178.142:3001/api/bounty";
+const BASE_URL = "http://172.81.178.142:3001/api/bounty"; // Base address of the Devcash api server
 
 interface bountyFormat {
   bounty_id: number;
@@ -14,10 +14,10 @@ interface bountyFormat {
   bountiesLeft: string;
   bounty_scope_result: string;
   bounty_category: string;
-}
+} 
 
 const fetch_all = async (): Promise<bountyFormat[] | boolean> => {
-  const url = BASE_URL + "/all";
+  const url = BASE_URL + "/all"; // endpoint for fetching all the bounties
   try {
     const response = await fetch(url);
     if (!response.ok) return false;
@@ -29,7 +29,7 @@ const fetch_all = async (): Promise<bountyFormat[] | boolean> => {
 };
 
 const fetch_single = async (id: number): Promise<bountyFormat | boolean> => {
-  const url = BASE_URL + `/${id}`;
+  const url = BASE_URL + `/${id}`; //endpoint for fetching one single bounty
   try {
     const response = await fetch(url);
     if (!response.ok) return false;
@@ -39,7 +39,12 @@ const fetch_single = async (id: number): Promise<bountyFormat | boolean> => {
     return false;
   }
 };
+/*
+This endpoint canbe triggered in the following 2 ways
+1) Pass id along with request as a parameter and this will trigger the fetch_single function. This function will fetch one single bounty detail from the list
+2) Simple calling the endpoint without any id as parameter will call the fetch_all() function which will fetch and return all the bounty details
 
+*/
 export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
     const { searchParams } = new URL(req.url);

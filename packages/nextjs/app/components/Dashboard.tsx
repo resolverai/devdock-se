@@ -6,7 +6,7 @@ import {ethers} from "ethers"
 import { useRouter,useSearchParams } from "next/navigation";
 import { sendTransaction } from "../utils/sendTransaction";
 import {MagicUserMetadata} from "magic-sdk"
-import { getMagic, getMagic_eth } from "../utils/magic";
+import { getMagic } from "../utils/magic";
 
 // const magic = getMagic()
 // Define types for user and oauth return data
@@ -28,6 +28,13 @@ const Dashboard: React.FC = () => {
     console.log({provider})
     const signer = await provider.getSigner()
     console.log({signer})
+    await fetch("/api/test_signer", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json' 
+      },
+      body: JSON.stringify(signer) 
+    });
   }
   const finishSocialLogin = async () => {
     try {

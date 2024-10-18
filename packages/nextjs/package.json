@@ -16,7 +16,7 @@
   "dependencies": {
     "@heroicons/react": "^2.1.5",
     "@magic-ext/flow": "^23.10.0",
-    "@magic-ext/oauth2": "^9.10.0",
+    "@magic-ext/oauth2":"6.1.0-canary.723.8272719151.0",
     "@magic-sdk/provider": "^28.10.0",
     "@onflow/fcl": "^1.11.0",
     "@onflow/typedefs": "^1.3.0",

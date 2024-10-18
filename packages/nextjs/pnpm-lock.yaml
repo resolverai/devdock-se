@@ -18,8 +18,8 @@ importers:
         specifier: ^23.10.0
         version: 23.10.0(@onflow/fcl@1.11.0(@types/react@18.3.8)(bufferutil@4.0.8)(google-protobuf@3.21.4)(react@18.3.1)(utf-8-validate@5.0.10))(@onflow/types@1.4.0)
       '@magic-ext/oauth2':
-        specifier: ^9.10.0
-        version: 9.10.0
+        specifier: 6.1.0-canary.723.8272719151.0
+        version: 6.1.0-canary.723.8272719151.0
       '@magic-sdk/provider':
         specifier: ^28.10.0
         version: 28.10.0(localforage@1.10.0)
@@ -1127,8 +1127,8 @@ packages:
       '@onflow/fcl': ^1.4.1
       '@onflow/types': ^1.1.0
 
-  '@magic-ext/oauth2@9.10.0':
-    resolution: {integrity: sha512-vqtqumL2Ysk+3NN2lGzEjgmpQC0a8eYY3pqq/ldXSGeRP0Gl0BKpa351reKpC9q/CXyXX7Fw2Fa57nn9JF7+FA==}
+  '@magic-ext/oauth2@6.1.0-canary.723.8272719151.0':
+    resolution: {integrity: sha512-wfy467AS52lr8AbNRb8CGhrPvtpb0L14BmWarlnHjbU4vIDoY0qPmwztwshqdITELex1p3H07tL3imjT025m3Q==}
 
   '@magic-sdk/commons@24.10.0':
     resolution: {integrity: sha512-rEVr+Yw4jlWkoEibbtkObTdphU7v7nEBFPIVwkN+fp3aCmYsO/zRojM5cxHYst8TRhqpGKYjX5RVP9gH4Eyncg==}
@@ -7751,7 +7751,7 @@ snapshots:
       '@onflow/fcl': 1.11.0(@types/react@18.3.8)(bufferutil@4.0.8)(google-protobuf@3.21.4)(react@18.3.1)(utf-8-validate@5.0.10)
       '@onflow/types': 1.4.0
 
-  '@magic-ext/oauth2@9.10.0':
+  '@magic-ext/oauth2@6.1.0-canary.723.8272719151.0':
     dependencies:
       crypto-js: 3.3.0
 

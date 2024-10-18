@@ -26,11 +26,11 @@ const createMagic = (key: string): MagicSDK => {
   });
 };
 
-const createMagic_eth = (key: string): MagicSDK_eth => {
-  return new MagicBase(key, {
-    extensions: [new OAuthExtension()]
-  });
-};
+// const createMagic_eth = (key: string): MagicSDK_eth => {
+//   return new MagicBase(key, {
+//     extensions: [new OAuthExtension()]
+//   });
+// };
 
 export const getMagic = (): MagicSDK | null => {
   if (typeof window !== 'undefined' && !magic) {
@@ -39,12 +39,12 @@ export const getMagic = (): MagicSDK | null => {
   return magic;
 };
 
-export const getMagic_eth = (): MagicSDK_eth | null => {
-  if (typeof window !== 'undefined' && !magic_eth) {
-    magic_eth = createMagic_eth('pk_live_C3F8C5D5B5287599'); // change key
-  }
-  return magic_eth;
-};
+// export const getMagic_eth = (): MagicSDK_eth | null => {
+//   if (typeof window !== 'undefined' && !magic_eth) {
+//     magic_eth = createMagic_eth('pk_live_C3F8C5D5B5287599'); // change key
+//   }
+//   return magic_eth;
+// };
 //pk_live_C3F8C5D5B5287599
 
 

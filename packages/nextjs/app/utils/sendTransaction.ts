@@ -1,5 +1,5 @@
 import * as fcl from '@onflow/fcl';
-import { getMagic,getMagic_eth } from './magic';
+import { getMagic } from './magic';
 
 const magic = getMagic()
 // const magic = getMagic_eth()
@@ -23,7 +23,7 @@ export async function sendTransaction(): Promise<TransactionStatus | undefined> 
     console.log('SENDING TRANSACTION...');
 
     try {
-        /*
+        
         const response = await fcl.send([
             fcl.transaction`
                 transaction {
@@ -54,7 +54,7 @@ export async function sendTransaction(): Promise<TransactionStatus | undefined> 
             console.log(`Oh No: ${data.errorMessage}`);
             return data;
         }
-    */} catch (error) {
+    } catch (error) {
         console.error('FAILED TRANSACTION', error);
         return undefined;
     }

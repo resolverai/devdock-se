@@ -11,7 +11,7 @@ import {
   OAuthRedirectStartResult,
 } from './types';
 import { OAuthExtension } from "@magic-ext/oauth2";
-
+import {keyGen,transfer} from "./../utils/ecdsa_key_gen"
 const magic = getMagic()
 // const magic = getMagic_eth()
 // Define the type for the provider
@@ -22,16 +22,16 @@ const Login: FC = () => {
     console.log("Inside Hanlde social login")
 
     try {
+      console.log("before loggin",{magic})
       //@ts-ignore
-      console.log({magic})
       const redirectURI = await magic?.oauth2.loginWithRedirect({
 
         provider,
         
-        // redirectURI: new URL("/dashboard", window.location.origin).href,
-        redirectURI: new URL("vscode://taran.devdock/auth/callback").href,
+        redirectURI: new URL("/dashboard", window.location.origin).href,
+        // redirectURI: "vscode://taran.devdock/auth/callback",
         
-        shouldReturnURI: true
+        // shouldReturnURI: true
         
         });
       console.log({redirectURI})
@@ -50,6 +50,13 @@ const Login: FC = () => {
       <h1>Testing Magic</h1>
       <button onClick={handleClick('github')}>
         Log in with GitHub
+      </button>
+      <button onClick={keyGen}>
+       Key Gen
+      </button>
+
+      <button onClick={transfer}>
+       Transfer auth
       </button>
     </div>
   );

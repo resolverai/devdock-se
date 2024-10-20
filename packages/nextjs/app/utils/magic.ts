@@ -7,6 +7,7 @@ type MagicSDK = InstanceWithExtensions<
   SDKBase,
   { oauth2: OAuthExtension; flow: FlowExtension }
 >;
+
 type MagicSDK_eth = InstanceWithExtensions<
   SDKBase,
   { oauth2: OAuthExtension }

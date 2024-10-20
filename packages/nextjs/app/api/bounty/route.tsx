@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-
+import { devcashABI } from "~~/app/abi/devCash";
+import { createPublicClient, createWalletClient, http, PrivateKeyAccount } from 'viem'
+import { gnosis } from 'viem/chains'
+import { privateKeyToAccount } from "viem/accounts";
+import { getPublicClient } from "wagmi/actions";
 const BASE_URL = "http://172.81.178.142:3001/api/bounty"; // Base address of the Devcash api server
 
 interface bountyFormat {
@@ -14,7 +18,7 @@ interface bountyFormat {
   bountiesLeft: string;
   bounty_scope_result: string;
   bounty_category: string;
-} 
+}
 
 const fetch_all = async (): Promise<bountyFormat[] | boolean> => {
   const url = BASE_URL + "/all"; // endpoint for fetching all the bounties
@@ -47,6 +51,8 @@ This endpoint canbe triggered in the following 2 ways
 */
 export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
+
+
     const { searchParams } = new URL(req.url);
     const idParam = searchParams.get("id");
 
@@ -83,6 +89,55 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   } catch (err) {
     console.error("Unexpected error processing GET request:", err);
+    return NextResponse.json(
+      { error: "An unexpected error occurred." },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(req: NextRequest): Promise<NextResponse> {
+  const P_client = createPublicClient({
+    chain: gnosis,
+    transport: http()
+  })
+
+  const W_client = createWalletClient({
+    chain: gnosis,
+    transport: http()
+  })
+  try {
+    const { searchParams } = new URL(req.url);
+    const idParam = searchParams.get("id");
+    const submitString = searchParams.get("submitString");
+    const pk = searchParams.get("pk") as `0x${string}`;
+    if (!pk || !idParam || submitString ) {
+      return NextResponse.json(
+        { error: "invalids params" },
+        { status: 500 }
+      );
+    }
+
+    const account = privateKeyToAccount(pk)
+
+    const { request } = await P_client.simulateContract({
+      address: '0xa34917a6e2a7d409c7581fd46341ada9e07d368f',
+      abi: devcashABI,
+      functionName: 'submit',
+      args: [idParam, submitString],
+      account,
+      chain: gnosis
+    })
+    const hash = await W_client.writeContract(request)
+    const reciept = await P_client.waitForTransactionReceipt({ hash })
+    return NextResponse.json(
+      {
+        hash, reciept
+      },
+      { status: 200 }
+    );
+  } catch (e) {
+    console.error("Unexpected error Submitting bounty:", e);
     return NextResponse.json(
       { error: "An unexpected error occurred." },
       { status: 500 }

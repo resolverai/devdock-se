@@ -1,14 +1,13 @@
 import * as fcl from '@onflow/fcl';
 import { getMagic } from './magic';
 
+import { TransactionStatus } from '@onflow/typedefs';
 const magic = getMagic()
 // const magic = getMagic_eth()
 console.log("inside transaction")
-console.log({magic})
-import { TransactionStatus } from '@onflow/typedefs';
 fcl.config().put('accessNode.api', 'https://rest-testnet.onflow.org');
 
-fcl.config().put('challenge.handshake', 'http://access-001.devnet9.nodes.onflow.org:8000');
+fcl.config().put('challenge.handshake', 'access.devnet.nodes.onflow.org:9000');
 
 //@ts-ignore
 const AUTHORIZATION_FUNCTION= magic?.flow.authorization()
@@ -21,7 +20,8 @@ const getReferenceBlock = async (): Promise<string> => {
 
 export async function sendTransaction(): Promise<TransactionStatus | undefined> {
     console.log('SENDING TRANSACTION...');
-
+    console.log({magic})
+    
     try {
         
         const response = await fcl.send([
@@ -36,7 +36,7 @@ export async function sendTransaction(): Promise<TransactionStatus | undefined> 
                 }
             `,
             fcl.ref(await getReferenceBlock()),
-            // fcl.authorizations([AUTHORIZATION_FUNCTION]), // <-- not auth needed for this transaction
+            fcl.authorizations([AUTHORIZATION_FUNCTION]), // <-- not auth needed for this transaction
             fcl.proposer(AUTHORIZATION_FUNCTION),
             fcl.payer(await AUTHORIZATION_FUNCTION),
         ]);

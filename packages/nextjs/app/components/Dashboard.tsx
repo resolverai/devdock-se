@@ -45,6 +45,8 @@ const Dashboard: React.FC = () => {
 
       const userInfo = await magic?.user.getInfo();
       console.log("userInfo:::", userInfo);
+      console.log("after loggin",{magic})
+
       setOauthReturnData(result || null);
       setUser(userInfo || null);
       await print_signer()
@@ -80,6 +82,9 @@ const Dashboard: React.FC = () => {
             <h1>Data returned:</h1>
             <pre className="user-info">{JSON.stringify(oauthReturnData, null, 3)}</pre>
           </div>
+          {/* <button className="transfer-button" onClick={sendTransaction}>
+        send
+      </button> */}
         </>
       )}
       <button className="logout-button" onClick={logout}>
